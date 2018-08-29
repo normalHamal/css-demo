@@ -1,0 +1,265 @@
+<html>
+  <head>
+    <title>秀就完事</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <style>
+      body, h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 0;
+      }
+      img {
+        width: 100%;
+        border-radius: 15px;
+        transition: all .5s;
+      }
+      img:not(:first-child):not(:last-child) {
+        margin: 25px 0;
+      }
+      article>h2 {
+        margin: 10px;
+        text-align: center;
+        background: transparent;
+      }
+      .dropDown {
+        margin-top: -100px;
+      }
+      .refresh-box {
+        height: 100px;
+        line-height: 100px;
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: #292929;
+        z-index: 1000;
+        opacity: 1;
+        /**
+         * 通知浏览器优化渲染
+         */
+        will-change: opacity;
+      }
+    </style>
+  </head>
+  <body>
+  <section class="dropDown">
+    <div class="refresh-box">
+      <h4 style="text-align: center;">下拉刷新</h4>
+    </div>
+    <div class="content-box">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000000" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000001" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000002" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000003" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000004" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000005" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000006" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000007" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000008" class="lazy-Load">
+      <img data-src="http://car.qvjunping.me:3232/random/img/acg?1000009" class="lazy-Load">
+    </div>
+  </section>
+
+  <section>
+    <!-- 点击放大 -->
+  </section>
+  <script>
+    /**
+     * 获取元素距离页面可视区域的距离
+     * @param  {[Element]} obj [元素节点对象]
+     */
+    function getPos(obj){
+        var l = 0
+          , t = 0;
+
+        while(obj) {
+            l += obj.offsetLeft;
+            t += obj.offsetTop;
+            obj = obj.offsetParent;
+        }
+        return {
+          left: l,
+          top: t
+        }
+    }
+    /**
+     * 图片懒加载
+     */
+    (function() {
+      // 默认显示的图
+      var baseImgUrl = 'http://wx3.sinaimg.cn/mw690/0060lm7Tly1fupn12fisdj30i20i2dg2.jpg';
+      // 所有需要懒加载的图片
+      var lazyImgs = document.querySelectorAll('img.lazy-Load');
+
+      // 附上默认图
+      Array.prototype.forEach.call(lazyImgs, function(img) {
+        img.src = baseImgUrl;
+      });
+
+      window.onload = function() {
+        window.onscroll = _throttle(lazyLoad, 50);
+      }
+
+      function _throttle(fn, wait) {
+        var time;
+
+        cb();
+        return cb;
+
+        function cb() {
+          var self = this;
+          var args = arguments;
+
+          if(!time) {
+            time = setTimeout(function() {
+              time = null;
+              fn.apply(self, args);
+            }, wait || 50);
+          }
+        }
+      }
+
+      function lazyLoad() {
+        // 当前滚动条的偏移量
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        // 视口高度
+        var viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+        Array.prototype.forEach.call(lazyImgs, function(img) {
+          var offset = scrollTop + viewportSize - getPos(img).top;
+
+          if(offset > 0 && !img.loaded) {
+            img.src = img.getAttribute('data-src');
+            img.setAttribute('loaded', true);
+          }
+        });
+      }
+    })();
+    
+    /**
+     * 下拉刷新
+     */
+    (function() {
+      // 获取需要下拉刷新的容器对象
+      var dropEle = document.querySelector('.dropDown');
+      var content = document.querySelector('.dropDown .content-box');
+      var fresh = document.querySelector('.dropDown .refresh-box h4');
+      var y = null;
+      var maxOffset = 100;
+      // 绑定事件
+      dropEle.addEventListener('touchstart', _start);
+      dropEle.addEventListener('touchmove', _move);
+      dropEle.addEventListener('touchend', _end);
+
+      function _start(e) {
+        // 记录最开始点击的点坐标
+        y = e.changedTouches[0].pageY;
+      }
+
+      function _move(e) {
+        var touch = e.changedTouches[0];
+        var move = touch.pageY - y;
+
+        if(move > 0) {
+          if(move > maxOffset) {
+            fresh.innerHTML = '松手刷新';
+          } else {
+            dropEle.style.marginTop = move - maxOffset;
+          }
+        }
+      }
+
+      function _end(e) {
+        var touch = e.changedTouches[0];
+        var move = touch.pageY - y;
+
+        if(move > maxOffset) {
+          fresh.innerHTML = '正在刷新...';
+          /**
+           * 刷新回调
+           */
+          setTimeout(function() {
+            var img = document.createElement('img');
+            img.setAttribute('src', 'http://car.qvjunping.me:3232/random/img/acg?' + +new Date());
+
+            content.insertBefore(img, content.firstChild);
+            _reset(maxOffset);
+          }.bind(this), 0);
+        } else {
+          _reset(move);
+        }
+      }
+
+      function _reset(move) {
+        if(move > 0) {
+          window.requestAnimationFrame(step);
+
+          function step(timestamp) {
+            dropEle.style.marginTop = Number(dropEle.style.marginTop.split('px')[0]) - 3;
+            move -= 3;
+
+            if(move > 0) {
+              window.requestAnimationFrame(step);
+            }
+          }
+        }
+      }
+    })();
+    // 点击放大（消除点击穿透）
+    // todo: 点击超出可视范围的不会居中
+    (function() {
+      var translateEle = document.querySelector('.content-box');
+      // 创建遮罩层节点
+      var mask = document.createElement('div');
+      mask.classList.add('overlay');
+      // 委托点击事件
+      translateEle.addEventListener('click', function(e) {
+        var target = e.target;
+        var parent = target.parentNode;
+        var parentPos = getPos(parent);
+        // 当前滚动条的偏移量
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        // 适口宽度
+        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        // 视口高度
+        var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+        if(target.nodeName === 'IMG') {
+          // 将图片元素借助于父元素来使其相对于视口居中
+          mask.style = 'width:' + width + 'px;height: ' + height + 'px;left:0px;top:0px;';
+          parent.style = 'width:' + target.width + 'px;height:' + target.height + 'px;position:relative;top:0px;left:0px;';
+          target.style = 'position: absolute;'
+           + 'z-index: 1000;'
+           + 'will-change: left, top, width, height;'
+           + 'left: ' + ((width - target.width >> 1) - parentPos.left) + 'px;'
+           + 'top: ' + ((height - target.height >> 1) - parentPos.top + scrollTop) + 'px;';
+
+          parent.insertBefore(mask, target);
+
+          function clear(e) {
+            mask.style = null;
+            parent.style = null;
+            target.style = null;
+
+            e.stopPropagation();
+            target.removeEventListener('click', clear, false);
+            mask.removeEventListener('click', clear, false);
+
+            setTimeout(function() {
+              mask.parentNode && mask.parentNode.removeChild(mask);
+            }, 0);
+          };
+
+          target.addEventListener('click', clear, false);
+          // 绑定遮罩层点击事件从而点击还原
+          mask.addEventListener('click', clear, false);
+        }
+      }, false);
+    })()
+  </script>
+  </body>
+</html>
