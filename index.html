@@ -211,55 +211,55 @@
     })();
     // 点击放大（消除点击穿透）
     // todo: 点击超出可视范围的不会居中
-    (function() {
-      var translateEle = document.querySelector('.content-box');
-      // 创建遮罩层节点
-      var mask = document.createElement('div');
-      mask.classList.add('overlay');
-      // 委托点击事件
-      translateEle.addEventListener('click', function(e) {
-        var target = e.target;
-        var parent = target.parentNode;
-        var parentPos = getPos(parent);
-        // 当前滚动条的偏移量
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-        // 适口宽度
-        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        // 视口高度
-        var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    // (function() {
+    //   var translateEle = document.querySelector('.content-box');
+    //   // 创建遮罩层节点
+    //   var mask = document.createElement('div');
+    //   mask.classList.add('overlay');
+    //   // 委托点击事件
+    //   translateEle.addEventListener('click', function(e) {
+    //     var target = e.target;
+    //     var parent = target.parentNode;
+    //     var parentPos = getPos(parent);
+    //     // 当前滚动条的偏移量
+    //     var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+    //     // 适口宽度
+    //     var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    //     // 视口高度
+    //     var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-        if(target.nodeName === 'IMG') {
-          // 将图片元素借助于父元素来使其相对于视口居中
-          mask.style = 'width:' + width + 'px;height: ' + height + 'px;left:0px;top:0px;';
-          parent.style = 'width:' + target.width + 'px;height:' + target.height + 'px;position:relative;top:0px;left:0px;';
-          target.style = 'position: absolute;'
-           + 'z-index: 1000;'
-           + 'will-change: left, top, width, height;'
-           + 'left: ' + ((width - target.width >> 1) - parentPos.left) + 'px;'
-           + 'top: ' + ((height - target.height >> 1) - parentPos.top + scrollTop) + 'px;';
+    //     if(target.nodeName === 'IMG') {
+    //       // 将图片元素借助于父元素来使其相对于视口居中
+    //       mask.style = 'width:' + width + 'px;height: ' + height + 'px;left:0px;top:0px;';
+    //       parent.style = 'width:' + target.width + 'px;height:' + target.height + 'px;position:relative;top:0px;left:0px;';
+    //       target.style = 'position: absolute;'
+    //        + 'z-index: 1000;'
+    //        + 'will-change: left, top, width, height;'
+    //        + 'left: ' + ((width - target.width >> 1) - parentPos.left) + 'px;'
+    //        + 'top: ' + ((height - target.height >> 1) - parentPos.top + scrollTop) + 'px;';
 
-          parent.insertBefore(mask, target);
+    //       parent.insertBefore(mask, target);
 
-          function clear(e) {
-            mask.style = null;
-            parent.style = null;
-            target.style = null;
+    //       function clear(e) {
+    //         mask.style = null;
+    //         parent.style = null;
+    //         target.style = null;
 
-            e.stopPropagation();
-            target.removeEventListener('click', clear, false);
-            mask.removeEventListener('click', clear, false);
+    //         e.stopPropagation();
+    //         target.removeEventListener('click', clear, false);
+    //         mask.removeEventListener('click', clear, false);
 
-            setTimeout(function() {
-              mask.parentNode && mask.parentNode.removeChild(mask);
-            }, 0);
-          };
+    //         setTimeout(function() {
+    //           mask.parentNode && mask.parentNode.removeChild(mask);
+    //         }, 0);
+    //       };
 
-          target.addEventListener('click', clear, false);
-          // 绑定遮罩层点击事件从而点击还原
-          mask.addEventListener('click', clear, false);
-        }
-      }, false);
-    })()
+    //       target.addEventListener('click', clear, false);
+    //       // 绑定遮罩层点击事件从而点击还原
+    //       mask.addEventListener('click', clear, false);
+    //     }
+    //   }, false);
+    // })()
   </script>
   </body>
 </html>
