@@ -198,7 +198,9 @@
             img.setAttribute('src', 'http://car.qvjunping.me:3232/random/img/acg?' + +new Date());
 
             content.insertBefore(img, content.firstChild);
-            _reset(maxOffset);
+            img.onload = function() {
+              _reset(maxOffset);
+            }
           }.bind(this), 0);
         } else {
           _reset(move);
