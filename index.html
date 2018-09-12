@@ -12,7 +12,6 @@
       img {
         width: 100%;
         border-radius: 15px;
-        transition: all .5s;
       }
       img:not(:first-child):not(:last-child) {
         margin: 25px 0;
@@ -42,6 +41,18 @@
          * 通知浏览器优化渲染
          */
         will-change: opacity;
+      }
+      @media screen and (min-width: 760px) {
+        .content-box {
+          display: flex;
+          width: 760px;
+          margin: 0 auto;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .content-box img {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
