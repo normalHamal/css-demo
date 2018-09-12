@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>黑客帝国~</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        background-color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="cav"></canvas>
+    <script>
+      (function() {
+        var cav = document.getElementById('cav');
+        // 创建 context 对象
+        var ctx = cav.getContext('2d');
+        // 将该canvas绘至全视口界面
+        var w = cav.width = window.innerWidth;
+        var h = cav.height = window.innerHeight;
+        var arr = Array(254).fill(1);
+        // 用来标识是否清除画布
+        var off = true;
+        // 响应界面大小变化
+        window.addEventListener('resize', function() {
+          w = cav.width = window.innerWidth;
+          h = cav.height = window.innerHeight;
+        });
+        // 绘制
+        (function draw() {
+          if(off) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, w, h);
+          } else {
+            ctx.clearRect(0, 0, w, h);
+          }
+          // 随机颜色
+          ctx.fillStyle = (function Color() {
+            var r = Math.floor(Math.random() * 256);
+            var g = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            return "rgb(" + r + ',' + g + ',' + b + ")";
+          })();
+
+          arr.map(function(value, index) {
+            // fromCharCode: 可接受一个指定的 Unicode 值，然后返回一个字符串。
+            // 65即是 A，为什么加57呢？
+            // 因为从 A - Z和 a - z加起来也就52，但是中间：
+            // X - Y - Z - [ - \ - ] - ^ - _ - `
+            // 多了6个这样的字符
+            var text = String.fromCharCode(65 + Math.random() * 57)
+            ctx.font = '12px 宋体';
+
+            ctx.fillText(text, index * 10, value);
+            arr[index] = value > h + Math.random() * 500 ? 0 : value + 12;
+          });
+          requestAnimationFrame(draw);
+        })();
+      })();
+    </script>
+  </body>
+</html>
