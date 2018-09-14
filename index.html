@@ -245,7 +245,7 @@
             img.setAttribute('src', 'https://www.xwboke.cn/api/api.php?' + +new Date());
 
             content.insertBefore(img, content.firstChild);
-            img.onload = function() {
+            img.onload = img.onerror = function() {
               _reset();
             }
           }.bind(this), 0);
