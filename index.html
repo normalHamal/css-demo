@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <style>
+      * {
+        box-sizing: border-box;
+      }
       body, h1, h2, h3, h4, h5, h6 {
         margin: 0;
         padding: 0;
@@ -20,6 +23,10 @@
         margin: 10px;
         text-align: center;
         background: transparent;
+      }
+      .lazy-Load {
+        height: 210px;
+        background-color: #f0f2f4;
       }
       .dropDown {
         margin-top: -100px;
@@ -72,6 +79,9 @@
         }
         .slide-box {
           display: block;
+        }
+        .lazy-Load {
+          height: 320px;
         }
       }
     </style>
@@ -126,15 +136,8 @@
      * 图片懒加载
      */
     (function() {
-      // 默认显示的图
-      var baseImgUrl = 'http://wx3.sinaimg.cn/mw690/0060lm7Tly1fupn12fisdj30i20i2dg2.jpg';
       // 所有需要懒加载的图片
       var lazyImgs = document.querySelectorAll('img.lazy-Load');
-
-      // 附上默认图
-      Array.prototype.forEach.call(lazyImgs, function(img) {
-        img.src = baseImgUrl;
-      });
 
       window.onload = function() {
         window.onscroll = _throttle(lazyLoad, 50);
@@ -142,7 +145,7 @@
 
       function _throttle(fn, wait) {
         var time;
-
+        // 立即执行一次（此处写的太随意，可改进）
         cb();
         return cb;
 
@@ -164,13 +167,21 @@
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         // 视口高度
         var viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        var w = document.querySelector('.content-box').clientWidth;
 
         Array.prototype.forEach.call(lazyImgs, function(img) {
           var offset = scrollTop + viewportSize - getPos(img).top;
 
           if(offset > 0 && !img.loaded) {
-            img.src = img.getAttribute('data-src');
-            img.setAttribute('loaded', true);
+            // 资源预加载，这样显示的时候就不会从上到下绘制而是整个绘制出来
+            var source = new Image();
+            source.src = img.getAttribute('data-src');
+            source.onload = function() {
+              var ratio = w / source.width;
+              img.style.height = source.height * ratio;
+              img.src = source.src;
+              img.setAttribute('loaded', true);
+            }
           }
         });
       }
