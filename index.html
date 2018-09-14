@@ -197,17 +197,26 @@
       var fresh = document.querySelector('.dropDown .refresh-box h4');
       var y = null;
       var maxOffset = 100;
+      // 视口高度
+      var viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+      window.addEventListener('resize', function() {
+        viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      });
+
       // 绑定事件
       dropEle.addEventListener('touchstart', _start);
       dropEle.addEventListener('touchmove', _move);
       dropEle.addEventListener('touchend', _end);
 
       function _start(e) {
-        // 记录最开始点击的点坐标
-        y = e.changedTouches[0].pageY;
+        // 记录最开始点击的点坐标，如果没处于首屏就不记录
+        y = e.changedTouches[0].pageY <= viewportSize ? e.changedTouches[0].pageY : null;
       }
 
       function _move(e) {
+        if(!y && typeof y === 'object') return;
+
         var touch = e.changedTouches[0];
         var move = touch.pageY - y;
 
@@ -221,6 +230,8 @@
       }
 
       function _end(e) {
+        if(!y && typeof y === 'object') return;
+
         var touch = e.changedTouches[0];
         var move = touch.pageY - y;
 
@@ -235,25 +246,29 @@
 
             content.insertBefore(img, content.firstChild);
             img.onload = function() {
-              _reset(maxOffset);
+              _reset();
             }
           }.bind(this), 0);
         } else {
-          _reset(move);
+          _reset();
         }
+
+        y = null;
       }
+      /**
+       * 将 refresh-box 还原到最开始的位置
+       */
+      function _reset() {
+        window.requestAnimationFrame(step);
 
-      function _reset(move) {
-        if(move > 0) {
-          window.requestAnimationFrame(step);
+        function step() {
+          var move = dropEle.style.marginTop;
+          dropEle.style.marginTop = Number(move.split('px')[0]) - 3;
 
-          function step(timestamp) {
-            dropEle.style.marginTop = Number(dropEle.style.marginTop.split('px')[0]) - 3;
-            move -= 3;
-
-            if(move > 0) {
-              window.requestAnimationFrame(step);
-            }
+          if(move > maxOffset * -1) {
+            window.requestAnimationFrame(step);
+          } else {
+            dropEle.style.marginTop = maxOffset * -1;
           }
         }
       }
