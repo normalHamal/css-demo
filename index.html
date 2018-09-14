@@ -262,8 +262,8 @@
         window.requestAnimationFrame(step);
 
         function step() {
-          var move = dropEle.style.marginTop;
-          dropEle.style.marginTop = Number(move.split('px')[0]) - 3;
+          var move = dropEle.style.marginTop.split('px')[0];
+          dropEle.style.marginTop = move - 3;
 
           if(move > maxOffset * -1) {
             window.requestAnimationFrame(step);
