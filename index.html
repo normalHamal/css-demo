@@ -206,11 +206,13 @@
       var content = document.querySelector('.dropDown .content-box');
       var fresh = document.querySelector('.dropDown .refresh-box h4');
       var y = null;
+      var w = content.clientWidth;
       var maxOffset = 100;
       // 视口高度
       var viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
       window.addEventListener('resize', function() {
+        w = content.clientWidth;
         viewportSize = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       });
 
@@ -251,11 +253,15 @@
            * 刷新回调
            */
           setTimeout(function() {
-            var img = document.createElement('img');
-            img.setAttribute('src', 'https://www.xwboke.cn/api/api.php?' + +new Date());
-
-            content.insertBefore(img, content.firstChild);
-            img.onload = img.onerror = function() {
+            var source = new Image();
+            source.src = 'https://www.xwboke.cn/api/api.php?' + +new Date();
+            content.insertBefore(source, content.firstChild);
+            source.onload = function() {
+              var ratio = w / source.width;
+              source.style.height = source.height * ratio;
+              _reset();
+            }
+            source.onerror = function() {
               _reset();
             }
           }.bind(this), 0);
