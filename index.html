@@ -257,11 +257,17 @@
             source.src = 'https://api.ixiaowai.cn/api/api.php?' + +new Date();
             content.insertBefore(source, content.firstChild);
             source.onload = function() {
+              // 防止内存泄露
+              source.onerror = source.onload = null;
+
               var ratio = w / source.width;
               source.style.height = source.height * ratio;
               _reset();
             }
             source.onerror = function() {
+              // 防止内存泄露
+              source.onerror = source.onload = null;
+              
               _reset();
             }
           }.bind(this), 0);
