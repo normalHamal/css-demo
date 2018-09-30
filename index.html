@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <style>
+      @keyframes fade-small-larger { 
+        from{
+          opacity: 0;
+          transform: scale(1, 1);
+        }
+        to{
+          opacity: 1;
+          transform: scale(1.5, 1.5);
+        }
+      }
+      @keyframes fade-zero-origin { 
+        from{
+          opacity: 0;
+          transform: scale(0, 0);
+          
+        }
+        to{
+          opacity: 1;
+          transform: scale(1, 1);
+        }
+      }
       * {
         box-sizing: border-box;
       }
@@ -18,6 +39,10 @@
       }
       img:not(:first-child):not(:last-child) {
         margin: 25px 0;
+      }
+      img[loaded=true] {
+        cursor: pointer;
+        cursor: zoom-in;
       }
       article>h2 {
         margin: 10px;
@@ -57,7 +82,8 @@
         bottom: 0;
         margin: auto;
         width: auto;
-        transform: scale(1);
+        animation: fade-zero-origin .3s both;
+        -webkit-animation: fade-zero-origin .3s both;
       }
       .slide-box {
         display: none;
@@ -92,9 +118,14 @@
         }
         .lazy-Load {
           height: 320px;
+          transition: transform 0.3s;
         }
         .overlay>img {
-          transform: scale(1.5);
+          animation: fade-small-larger .3s both;
+          -webkit-animation: fade-small-larger .3s both;
+        }
+        .content-box .lazy-Load:hover {
+          transform: scale(1.05, 1.05);
         }
       }
     </style>
