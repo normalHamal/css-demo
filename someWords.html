@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>12345</title>
+        <title>INLOW dot ONLINE</title>
+        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
         <style>
         @font-face {
             font-family: 'Open Sans';
@@ -14,6 +15,12 @@
         }
 
         body {
+            -webkit-touch-callout: none;
+            -webkit-text-size-adjust: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
             user-select: none;
             font-family: 'Open Sans', sans-serif;
         }
@@ -28,6 +35,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #f2f2f2;
         }
 
         .container {
@@ -49,13 +57,16 @@
         }
 
         @keyframes title {
-            24.5% {
+            10% {
+                margin-top: 0;
+            }
+            32% {
                 margin-top: calc(-80vw / 7);
             }
-            49% {
+            54% {
                 margin-top: calc(-80vw / 7 * 2);
             }
-            73.5% {
+            76% {
                 margin-top: calc(-80vw / 7 * 3);
             }
             98% {
@@ -65,17 +76,69 @@
                 margin-top: 0;
             }
         }
+
+        #word {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+        
+        #word form {
+            display: flex;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        #input {
+            flex: auto;
+            padding: 0 3px;
+            height: 30px;
+            border: none;
+            outline: none;
+            color: black;
+            caret-color: #0090ff;
+            background: transparent;
+        }
+        /* 兼容性光标颜色写法 */
+        @supports ( -webkit-mask: none ) and ( not ( caret-color: #0090ff )) {
+          input {
+              color: #0090ff;
+          }
+
+          input::first-line {
+              color: black;
+          }
+        }
+
+        #submit {
+            flex: none;
+            width: 40px;
+            border: none;
+            outline: none;
+            color: #4ea1e1;
+            background: transparent;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
         </style>
     </head>
-    <body>
+    <!-- 兼容Opera和IE6-9一样 -->
+    <body unselectable="on" onselectstart="return false;" ondrag="return false;">
         <div id="title">
             <div class="container">
-                <div>你好吗你好我和</div>
-                <div>方式加快放</div>
-                <div>副书记福利你们</div>
-                <div>发送端方式</div>
-                <div>方式当浮点</div>
+                <div>建议大家</div>
+                <div>合理评估自身实力</div>
+                <div>该退就退</div>
+                <div>不要做无用功</div>
+                <div>INLOW.ONLINE</div>
             </div>
+        </div>
+        <div id="word">
+            <form action="/" method="GET">
+                <input name=someword" type="text" id="input" placeholder="证明你来过">
+                <input type="submit" id="submit" value="OK">
+            </form>
         </div>
     </body>
 </html>
