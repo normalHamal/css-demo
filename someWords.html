@@ -44,17 +44,14 @@
     98% {
       margin-top: calc(-80vw / 7 * 4);
     }
-    100% {
-      margin-top: 0;
-    }
   }
 
   @keyframes randomBG {
     10% {
-      background-color: #6c792c;
+      background-color: #292929;
     }
     32% {
-      background-color: #292929;
+      background-color: #6c792c;
     }
     54% {
       background-color: #400404;
@@ -64,9 +61,6 @@
     }
     98% {
       background-color: #165421;
-    }
-    100% {
-      background-color: #6c792c;
     }
   }
 
@@ -94,7 +88,9 @@
     align-items: center;
     flex-wrap: wrap;
     animation: randomBG 8s infinite;
+    -webkit-animation: randomBG 8s infinite;
     color: #d9d9e0;
+    background-color: #292929;
   }
 
   .container {
@@ -116,7 +112,7 @@
   .barrage div {
     text-align: left;
     padding: 1vh 3.5vw;
-    font-size: calc(80vw / 18);
+    font-size: calc(100vh / 30);
     /* 超出单行省略 */
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -126,12 +122,13 @@
   .barrage div:first-child {
     color: #686d76;
     padding: 2vh 3.5vw;
-    font-size: calc(80vw / 12);
+    font-size: calc(100vh / 20);
     border-left: 1px solid #a7a7a7;
   }
 
   .container div:first-child {
     animation: title 8s infinite;
+    -webkit-animation: title 8s infinite;
   }
 
   #word {
